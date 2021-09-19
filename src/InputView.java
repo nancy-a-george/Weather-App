@@ -27,7 +27,7 @@ public class InputView extends JFrame implements ActionListener {
         // Fill arrays with values of airports, years, months and dates that are
         // needed for
         // the drop down boxes
-        String[] Airport = {"EGPF", "EGLL", "EGFF", "EGCC", "OKBK", "VIDP"};
+        String[] Airport = {"EGPF", "EGLL", "EGFF", "EGCC", "OKBK", "VIDP", "TEST MODE"};
         String[] Year = {"1996", "1997", "1998", "1999", "2000", "2001",
                 "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009",
                 "2010", "2011", "2012", "2013", "2014", "2015"};

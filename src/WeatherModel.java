@@ -11,6 +11,7 @@
  *
  */
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,14 +45,24 @@ public class WeatherModel {
         weatherData.clear();
 
         try {
-            // Get data from the URL formed
-            URL u = new URL(URL1 + airport + SLASH + URL2 + SLASH + date);
-            System.out.println("URL"+ u);
-            URLConnection connection = u.openConnection();
-            InputStream inStream = connection.getInputStream();
+            Scanner file;
+System.out.println("airpot: "+airport);
 
-            // Read the file got from the URL
-            Scanner file = new Scanner(inStream);
+            if (airport.equals("TEST MODE"))
+            {
+                File weatherDataText = new File ("WeatherData.txt");
+                file = new Scanner(weatherDataText);
+            }
+            else {
+                // Get data from the URL formed
+                URL u = new URL(URL1 + airport + SLASH + URL2 + SLASH + date);
+                System.out.println("URL" + u);
+                URLConnection connection = u.openConnection();
+                InputStream inStream = connection.getInputStream();
+
+                // Read the file got from the URL
+                file = new Scanner(inStream);
+            }
 
             // Skip the first line since it's blank
             line = file.nextLine();
@@ -64,7 +75,7 @@ public class WeatherModel {
             // If the Temperature is in Fahrenheit it means that all the other
             // weather data
             // are also in other formats. Set an error flag
-            if (heading.length>1 && heading[1].contains("F")) {
+            if (heading.length>1 && heading[1].contains("TemperatureF")) {
                 flag = 1;
             }
 
@@ -74,45 +85,47 @@ public class WeatherModel {
 
                     // Get each line
                     line = file.nextLine();
-                    System.out.println("line3"+line);
-                    /*
+                    System.out.println("line3" + line);
+
                     // If no data is available set the error flag
                     if (line.equals("No daily or hourly history data available<br />")) {
                         flag = 2;
                         break;
                     }
 
-                    // Split the fields separated by a comma
-                    String[] fields = line.split(",");
+                    if ((line.contains("AM") || line.contains("PM")) && !line.contains("div") ) {
+                        // Split the fields separated by a comma
+                        String[] fields = line.split(",");
 
-                    // Store the split fields into the respective variables
-                    timeBST = fields[0];
-                    temperature = fields[1];
-                    dewPoint = fields[2];
-                    humidity = fields[3];
-                    seaPressure = fields[4];
-                    visibility = fields[5];
-                    windDirection = fields[6];
-                    windSpeed = fields[7];
-                    gustSpeed = fields[8];
-                    precipitation = fields[9];
-                    events = fields[10];
-                    conditions = fields[11];
-                    windDirDegrees = fields[12];
+                        // Store the split fields into the respective variables
+                        timeBST = fields[0];
+                        temperature = fields[1];
+                        dewPoint = fields[2];
+                        humidity = fields[3];
+                        seaPressure = fields[4];
+                        visibility = fields[5];
+                        windDirection = fields[6];
+                        windSpeed = fields[7];
+                        gustSpeed = fields[8];
+                        precipitation = fields[9];
+                        events = fields[10];
+                        conditions = fields[11];
+                        windDirDegrees = fields[12];
 
-                    // Split the dateUTC field at "<br />" to remove it
-                    // from the string
-                    String[] fields2 = fields[13].split("<br /");
-                    dateUTC = fields2[0];
+                        // Split the dateUTC field at "<br />" to remove it
+                        // from the string
+                        String[] fields2 = fields[13].split("<br /");
+                        dateUTC = fields2[0];
 
-                    // Store the split file data into the array list. The array
-                    // list
-                    // is a collection of objects of the Structure Model class
-                    weatherData.add(new StructureModel(timeBST, temperature,
-                            dewPoint, humidity, seaPressure, visibility,
-                            windDirection, windSpeed, gustSpeed, precipitation,
-                            events, conditions, windDirDegrees, dateUTC));
-*/
+                        // Store the split file data into the array list. The array
+                        // list
+                        // is a collection of objects of the Structure Model class
+                        weatherData.add(new StructureModel(timeBST, temperature,
+                                dewPoint, humidity, seaPressure, visibility,
+                                windDirection, windSpeed, gustSpeed, precipitation,
+                                events, conditions, windDirDegrees, dateUTC));
+
+                    }
                 }
 
             // If the array list is empty, set the error flag
